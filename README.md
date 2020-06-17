@@ -1,4 +1,13 @@
-# template_node_ts
+# template_express_ts
+
+## Generate self-signed SSL certificate
+```
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+    -keyout example.key -out example.crt -subj "/CN=example.com" \
+    -addext "subjectAltName=DNS:example.com,DNS:example.net,IP:10.0.0.1"
+```
+
+# Derived from template_node_ts
 Template for node projects including configuration for Typescript and eslint 
 as well as mocha and chai for testing.
 
