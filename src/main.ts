@@ -1,21 +1,19 @@
-// Dependencies
 import express from 'express';
-import * as path from 'path';
-import compression from 'compression';
-import * as spdy from 'spdy';
+import path from 'path';
 import * as fs from 'fs';
+import * as spdy from 'spdy';
 import * as http from 'http';
 
-const testRouter = require('./router/testRouter');
+const app = express();
 
 const httpPort = 80;
-const httpsPort = 443;
+const httpsPort = 443
 
-const app: express.Application = express();
-app.use(express.json());
+app.use(express.static(__dirname + '/../dist'))
 
-app.use(compression());
-app.use(express.static(`${__dirname}/../dist/`));
+app.get('/hello', (req, res) => {
+  res.send('Hello World!');
+})
 
 http.createServer((req, res) => {
   res.writeHead(301, {'Location': `https://${req.headers['host']}${req.url}`});
@@ -26,10 +24,10 @@ http.createServer((req, res) => {
 
 // Certificate
 const privateKey = fs.readFileSync(
-  `${__dirname}/../certificates/example.key`,
+  `${__dirname}/../certificates/localhost.key`,
   'utf8');
 const certificate = fs.readFileSync(
-  `${__dirname}/../certificates/example.crt`,
+  `${__dirname}/../certificates/localhost.crt`,
   'utf8');
 
 const credentials = {
@@ -46,8 +44,6 @@ spdy.createServer(credentials, app).listen(httpsPort, (error) => {
     console.log(`HTTP/2 Listening on port: ${httpsPort}.`);
   }
 });
-
-app.use('/testAPI', testRouter);
 
 app.use((req, res) => {
   console.log(__dirname);
