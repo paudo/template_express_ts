@@ -8,7 +8,9 @@
     "start": "node ./out/main.js",
     "build": "tsc --build tsconfig.json",
     "serve": "ts-node src/main.ts",
-    "lint": "eslint"
+    "lint": "eslint",
+    "devstart": "tsc && node ./out/main.js",
+    "dev": "node node_modules/nodemon/bin/nodemon.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
     "@types/spdy": "^3.4.4",
     "compression": "^1.7.4",
     "express": "^4.17.1",
+    "nodemon": "^2.0.4",
     "spdy": "^4.0.2",
     "typescript": "^3.8.3"
   },
