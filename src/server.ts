@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Credentials} from './model/interface/credentials.interface';
 import {ApiRouter} from './apiRouter';
+import * as http from 'http';
 
 /**
  * Creates an ExpressJS server which both hosts the frontend and the backend. In production mode an additional HTTP/2 connection is served
@@ -26,6 +27,17 @@ export class Server {
       console.log(`open http://localhost:${process.env.INSECURE_APP_PORT}`);
       console.log(`HTTP/1 Listening on port: ${process.env.INSECURE_APP_PORT}.`);
     });
+  }
+
+  private createPortForward(): void {
+    http.createServer((req, res) => {
+      // 302 moved temporary, 301 moved permanent
+      res.writeHead(302, {'Location': `https://${req.headers['host']}${req.url}`});
+      res.end();
+    }).listen(process.env.INSECURE_APP_PORT, () => {
+      console.log(`HTTP/1 Listening on port: ${process.env.INSECURE_APP_PORT}.`);
+    });
+
   }
 
   /**
@@ -49,8 +61,6 @@ export class Server {
     this._app.use(compression());
     this._app.use(express.static(__dirname + '/../dist'));
 
-    this.createInsecureServer();
-
     if (prod) {
       // Certificate
       const privateKey = fs.readFileSync(
@@ -64,8 +74,10 @@ export class Server {
         key: privateKey,
         cert: certificate,
       };
-
+      this.createPortForward();
       this.createSecureServer(credentials);
+    } else {
+      this.createInsecureServer();
     }
 
     // Creates the API Router with its sub routers
