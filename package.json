@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --require ts-node/register ./spec/*.spec.ts",
-    "start": "node ./out/main.js",
+    "start": "node ./out/main.js -p true",
     "build": "tsc --build tsconfig.json",
     "serve": "nodemon",
     "lint": "eslint",
@@ -23,11 +23,15 @@
   "homepage": "https://github.com/paudo/template_express_ts#readme",
   "dependencies": {
     "compression": "^1.7.4",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "spdy": "^4.0.2",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
+    "cors": "^2.8.5",
+    "@types/cors": "^2.8.9",
     "@types/chai": "^4.2.10",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.5",
@@ -36,6 +40,7 @@
     "@types/spdy": "^3.4.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
+    "@types/yargs": "^15.0.11",
     "chai": "^4.2.0",
     "eslint": "^7.0.0",
     "eslint-config-google": "^0.14.0",
