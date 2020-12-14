@@ -3,18 +3,22 @@ import * as yargs from 'yargs';
 import {Server} from './server';
 import {EnvFile} from './model/interface/envFile.interface';
 
+// Defines program arguments -p true for production mode
 let args = yargs
   .option('prod', {
     alias: 'p',
     default: false,
   }).argv;
 
+// Defines data structure for process.env for auto completion
 declare var process: {
   env: EnvFile
 };
 
+// sets production mode flag
 const prod: boolean = args.prod + '' === 'true';
 
+// selects .env config file based on production mode flag
 dotenv.config({
   path: prod ? '.env' : '.env.test',
 });

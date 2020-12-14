@@ -1,3 +1,6 @@
+/**
+ * Example .env config file interface for test and production environment. If needed additional parameters can be added.
+ */
 export interface EnvFile {
   INSECURE_APP_PORT: number;
   SECURE_APP_PORT: number;
