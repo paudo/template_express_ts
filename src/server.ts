@@ -29,9 +29,14 @@ export class Server {
     });
   }
 
+  /**
+   * Creates an HTTP/1 server which forwards to HTTP/2
+   * @private
+   */
   private createPortForward(): void {
     http.createServer((req, res) => {
       // 302 moved temporary, 301 moved permanent
+      // 302 recommended for testing locally to avoid problems with browsers not connecting to HTTP anymore
       res.writeHead(302, {'Location': `https://${req.headers['host']}${req.url}`});
       res.end();
     }).listen(process.env.INSECURE_APP_PORT, () => {
