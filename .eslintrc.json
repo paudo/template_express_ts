@@ -4,7 +4,10 @@
         "node": true
     },
     "extends": [
-        "google"
+        "google",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -19,5 +22,9 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "@typescript-eslint/no-use-before-define": "off",
+        "require-jsdoc": "off",
+        "sort-vars": "warn",
+        "padded-blocks": "off"
     }
 }

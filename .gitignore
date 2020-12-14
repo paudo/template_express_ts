@@ -70,8 +70,8 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
+#.env
+#.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -206,3 +206,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,node
 /dist/
 /certificates/
+/.idea/*
