@@ -1,51 +1,39 @@
-import express from 'express';
-import path from 'path';
-import * as fs from 'fs';
-import * as spdy from 'spdy';
-import * as http from 'http';
+import dotenv from 'dotenv';
+import * as yargs from 'yargs';
+import {Server} from './server';
+import {EnvFile} from './model/interface/envFile.interface';
 
-const app = express();
+let args = yargs
+  .option('prod', {
+    alias: 'p',
+    default: false,
+  }).argv;
 
-const httpPort = 80;
-const httpsPort = 443
-
-app.use(express.static(__dirname + '/../dist'))
-
-app.get('/hello', (req, res) => {
-  res.send('Hello World!');
-})
-
-http.createServer((req, res) => {
-  res.writeHead(301, {'Location': `https://${req.headers['host']}${req.url}`});
-  res.end();
-}).listen(httpPort, () => {
-  console.log(`HTTP/1 Listening on port: ${httpPort}.`);
-});
-
-// Certificate
-const privateKey = fs.readFileSync(
-  `${__dirname}/../certificates/localhost.key`,
-  'utf8');
-const certificate = fs.readFileSync(
-  `${__dirname}/../certificates/localhost.crt`,
-  'utf8');
-
-const credentials = {
-  key: privateKey,
-  cert: certificate,
+declare var process: {
+  env: EnvFile
 };
 
-// @ts-ignore
-spdy.createServer(credentials, app).listen(httpsPort, (error) => {
-  if (error) {
-    console.error(error);
-    return process.exit(1);
-  } else {
-    console.log(`HTTP/2 Listening on port: ${httpsPort}.`);
-  }
+const prod: boolean = args.prod + '' === 'true';
+
+dotenv.config({
+  path: prod ? '.env' : '.env.test',
 });
 
-app.use((req, res) => {
-  console.log(__dirname);
-  res.sendFile(path.join(`${__dirname}/../dist/index.html`));
-});
+// DB config if needed
+// const dbCredentials: DbCredentials = {
+//   user: process.env.DB_USER,
+//   host: process.env.DB_HOST,
+//   database: process.env.DB_DATABASE,
+//   password: process.env.DB_PASSWORD,
+//   port: process.env.DB_PORT,
+//   max: process.env.DB_MAX,
+// };
+
+// Creating pool or other connection to DB if needed
+// DbConnection.getInstance().pool = new Pool(dbCredentials);
+// DbConnection.getInstance().pool.on('error', (err, client) => {
+//   console.error('New Error:', err.stack);
+//   client.connect();
+// });
+
+new Server(prod);
